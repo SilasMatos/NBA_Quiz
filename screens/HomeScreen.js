@@ -1,13 +1,13 @@
-import { StyleSheet, Text, View, Image, Pressable } from "react-native";
+import { StyleSheet, Text, View, Image, Pressable, TouchableOpacity } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 
 const HomeScreen = () => {
-    const navigation = useNavigation();
+  const navigation = useNavigation();
   return (
-    <View style={{ marginTop: 25, }}>
+    <View style={styles.container}>
       <Image
-        style={{ height: 200, width: "100%", resizeMode: "contain" }}
+        style={{ height: 400, width: "100%", resizeMode: "contain" }}
         source={require('../assets/bola-de-basquete.png')}
       />
 
@@ -20,7 +20,7 @@ const HomeScreen = () => {
             fontWeight: "600",
           }}
         >
-          Basquetebol Quiz
+          NBA Quiz
         </Text>
 
         <View
@@ -29,6 +29,8 @@ const HomeScreen = () => {
             backgroundColor: "#e4e7ed",
             borderRadius: 6,
             marginTop: 20,
+            borderWidth: 4,
+            borderColor: "#00f",
           }}
         >
           <View
@@ -51,8 +53,6 @@ const HomeScreen = () => {
             </Text>
           </View>
 
-        
-
           <View
             style={{
               flexDirection: "row",
@@ -69,7 +69,7 @@ const HomeScreen = () => {
                 fontWeight: "500",
               }}
             >
-             Cada pergunta tem um limite de tempo de 15 segundos
+              Cada pergunta tem um limite de tempo de 15 segundos
             </Text>
           </View>
 
@@ -89,25 +89,27 @@ const HomeScreen = () => {
                 fontWeight: "500",
               }}
             >
-             Você deve responder a todas as perguntas obrigatoriamente
+              Você deve responder a todas as perguntas obrigatoriamente
             </Text>
           </View>
         </View>
       </View>
 
       <Pressable
-      onPress={() => navigation.navigate("Quiz")}
+        onPress={() => navigation.navigate("Quiz")}
         style={{
           backgroundColor: "#2586f5",
           padding: 14,
-          width:120,
+          width: 120,
           borderRadius: 25,
           marginLeft: "auto",
           marginRight: "auto",
           marginTop: 30,
         }}
       >
-        <Text style={{color:"white",fontWeight:"600",textAlign:"center"}}>Start Quiz</Text>
+        <Text style={{ color: "white", fontWeight: "600", textAlign: "center" }}>
+          Começar Quiz
+        </Text>
       </Pressable>
     </View>
   );
@@ -115,4 +117,9 @@ const HomeScreen = () => {
 
 export default HomeScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+});

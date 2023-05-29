@@ -3,43 +3,42 @@ import React, { useState, useEffect } from "react";
 import questions from "../data/questions";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
+
 const QuizScreen = () => {
   const navigation = useNavigation();
   const data = questions;
   const totalQuestions = data.length;
-  // points
+  const minimumCorrectAnswers = 10;
+  const incorrectAnswerLimit = 10;
+  const correctAnswerLimit = 15;
   const [points, setPoints] = useState(0);
-
-  // index of the question
   const [index, setIndex] = useState(0);
-
-  // answer Status (true or false)
   const [answerStatus, setAnswerStatus] = useState(null);
-
-  // answers
   const [answers, setAnswers] = useState([]);
-
-  // selected answer
   const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null);
-
-  // Counter
   const [counter, setCounter] = useState(15);
-
-  // interval
   let interval = null;
-
-  // progress bar
-  const progressPercentage = Math.floor((index/totalQuestions) * 100);
+  const progressPercentage = Math.floor((index / totalQuestions) * 100);
+  
+  useEffect(() => {
+    if (points < minimumCorrectAnswers && (index + 1 - points) > incorrectAnswerLimit) {
+      clearTimeout(interval);
+      navigation.navigate("Defeat");
+    } else if (index + 1 > correctAnswerLimit) {
+      clearTimeout(interval);
+      navigation.navigate("Victory");
+    }
+  }, [index, points]);  
 
   useEffect(() => {
     if (selectedAnswerIndex !== null) {
-      if (selectedAnswerIndex === currentQuestion?.correctAnswerIndex) {
+      if (selectedAnswerIndex === data[index]?.correctAnswerIndex) {
         setPoints((points) => points + 10);
         setAnswerStatus(true);
-        answers.push({ question: index + 1, answer: true });
+        setAnswers((prevAnswers) => [...prevAnswers, { question: index + 1, answer: true }]);
       } else {
         setAnswerStatus(false);
-        answers.push({ question: index + 1, answer: false });
+        setAnswers((prevAnswers) => [...prevAnswers, { question: index + 1, answer: false }]);
       }
     }
   }, [selectedAnswerIndex]);
@@ -59,17 +58,14 @@ const QuizScreen = () => {
         setCounter(15);
       }
     };
-
     interval = setTimeout(myInterval, 1000);
-
-    // clean up
     return () => {
       clearTimeout(interval);
     };
   }, [counter]);
 
   useEffect(() => {
-    if (index + 1 > data.length) {
+    if (index + 1 > totalQuestions) {
       clearTimeout(interval)
       navigation.navigate("Results", {
         answers: answers,
@@ -86,7 +82,6 @@ const QuizScreen = () => {
 
   const currentQuestion = data[index];
   console.log(answerStatus)
-
   return (
     <SafeAreaView>
       <View
@@ -139,7 +134,7 @@ const QuizScreen = () => {
         >
           <Text
             style={{
-              backgroundColor: "#FFC0CB",
+              backgroundColor: "red",
               borderRadius: 12,
               position: "absolute",
               left: 0,
@@ -164,7 +159,9 @@ const QuizScreen = () => {
         </Text>
         <View style={{ marginTop: 12 }}>
           {currentQuestion?.options.map((item, index) => (
+
             <Pressable
+            key={index}
               onPress={() =>
                 selectedAnswerIndex === null && setSelectedAnswerIndex(index)
               }
@@ -254,7 +251,6 @@ const QuizScreen = () => {
           ))}
         </View>
       </View>
-
       <View
         style={
           answerStatus === null
@@ -279,13 +275,11 @@ const QuizScreen = () => {
             {!!answerStatus ? "Correto" : "Errado"}
           </Text>
         )}
-
         {index + 1 >= questions.length ? (
           <Pressable
             onPress={() =>
-              navigation.navigate("Results", {
+              navigation.navigate("Victory", {
                 points: points,
-
                 answers: answers,
               })
             }
@@ -298,7 +292,7 @@ const QuizScreen = () => {
               borderRadius: 6,
             }}
           >
-            <Text style={{ color: "white" }}>Resultados</Text>
+            <Text style={{ color: "white" }}>Próxima Questão</Text>
           </Pressable>
         ) : answerStatus === null ? null : (
           <Pressable

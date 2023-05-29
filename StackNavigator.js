@@ -5,6 +5,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './screens/HomeScreen';
 import QuizScreen from './screens/QuizScreen';
 import ResultsScreen from './screens/ResultsScreen';
+import Victory from './screens/Victory';
+import Defeat from './screens/Defeat'
 const StackNavigator = () => {
     const Stack = createNativeStackNavigator();
   return (
@@ -13,6 +15,8 @@ const StackNavigator = () => {
         <Stack.Screen name="Home" component={HomeScreen} options={{headerShown:false}}/>
         <Stack.Screen name="Quiz" component={QuizScreen} options={{headerShown:false}}/>
         <Stack.Screen name="Results" component={ResultsScreen} options={{headerShown:false}}/>
+        <Stack.Screen name="Victory" component={Victory} options={{headerShown:false}}/>
+        <Stack.Screen name="Defeat" component={Defeat} options={{headerShown:false}}/>
       </Stack.Navigator>
     </NavigationContainer>
   )
